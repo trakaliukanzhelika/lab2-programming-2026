@@ -10,6 +10,10 @@
 #include <fstream>
 #include <stdexcept>
 #include <thread>
+#include <algorithm>
+#include <execution>
+#include <iomanip>
+#include <limits>
 
 struct Timer {
 private:
@@ -77,7 +81,7 @@ void get_num_from_file(std::vector<int>& exp_data, const std::string& filename) 
 
 // Custom parallel none_of algorithm
 template <typename Predicate>
-
+// The function takes vector of generated numbers, a number of threads and a predicate
 bool custom_none_of(const std::vector<int>& exp_data, size_t K, Predicate pred) {
 	size_t chunk_count = exp_data.size() / K;
 
@@ -99,12 +103,80 @@ bool custom_none_of(const std::vector<int>& exp_data, size_t K, Predicate pred) 
 	}
 
 	return std::all_of(thread_results.begin(), thread_results.end(), [](int res) {
-		return res == 1;
+		return res;
 		});
 }
 
 
+int main() {
+	// Generating number and storing them in the vector
+	const std::string filename = "data.txt";
+	std::vector<int> generated_nums;
+	try {
+		gen_random_num(filename, 10000000, 1, 10000);
+		get_num_from_file(generated_nums, filename);
+	}
+	catch (const std::exception& e) {
+		std::cerr << "ERROR" << e.what() << "\n";
+		return 1;
+	}
+	
+	auto predicate = [](int num) {
+		return (num > 20000); // entered this value, because we want to iterate through full vector
+		};
 
+	// Testing library algorithm excecution speed
+	std::cout << "Hardware threads: " << std::thread::hardware_concurrency() << "\n";
+	std::cout << "---LIBRARY ALGORITHM std::none_of() ---\n";
+	{
+		Timer t("No policy: ");
+		volatile bool res = std::none_of(generated_nums.begin(), generated_nums.end(), predicate);
+	}
+	{
+		Timer t("Policy seq: ");
+		volatile bool res = std::none_of(std::execution::seq, generated_nums.begin(), generated_nums.end(), predicate);
+	}
+	{
+		Timer t("Policy par: ");
+		volatile bool res = std::none_of(std::execution::par, generated_nums.begin(), generated_nums.end(), predicate);
+	}
+	{
+		Timer t("Policy unseq: ");
+		volatile bool res = std::none_of(std::execution::par_unseq, generated_nums.begin(), generated_nums.end(), predicate);
+	}
+
+
+	// Testing custom algorithm excecution speed on different amount of threads
+	std::cout << "---CUSTOM PARALLEL ALGORITHM---\n";
+	double best_time = std::numeric_limits <double> ::infinity();
+	size_t best_k;
+
+	std::cout << std::left << std::setw(5) << "K" <<
+		"|" << "Time(ms) \n";
+
+	size_t k = 16;
+	for (size_t i = 1; i <= k; i++) {
+		double curr_time;
+		double curr_k = i;
+		{
+			Timer t("", &curr_time);
+			volatile bool res = custom_none_of(generated_nums, i, predicate);
+		}
+		std::cout << std::left << std::setw(5) << curr_k << "| " << curr_time << "\n";
+
+		if (curr_time < best_time) {
+			best_time = curr_time;
+			best_k = curr_k;
+		}
+	}
+
+	std::cout << "---BEST VALUES---\n";
+	std::cout << "Number of threads: " << best_k << "\n";
+	std::cout << "Time: " << best_time << "\n";
+
+
+
+}
 
 
 
