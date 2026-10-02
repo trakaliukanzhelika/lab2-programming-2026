@@ -5,15 +5,13 @@
 #include <chrono>
 #include <iostream>
 #include <string>
-#include <random>
-#include <vector>
-#include <fstream>
-#include <stdexcept>
 #include <thread>
 #include <algorithm>
 #include <execution>
 #include <iomanip>
 #include <limits>
+#include "data_gen.h"
+#include "custom_none_of.h"
 
 struct Timer {
 private:
@@ -25,7 +23,9 @@ public:
 	Timer(const std::string& name, double* out_time = nullptr) : exp_name(name),
 		start(std::chrono::high_resolution_clock::now()),
 		out_time(out_time)
-	{ ; }
+	{
+		;
+	}
 	// If the pointer was provided, assigns the duration to the specific variable.
 	// Otherwise, outputs the experiment`s name and duration.
 	~Timer() {
@@ -42,72 +42,6 @@ public:
 };
 
 
-// Generates random integer number sequence and stores it in provided file.
-// Writes quantity of generated numbers as the first number in file.
-void gen_random_num(const std::string& filename,size_t quantity, int min_val, int max_val) {
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(min_val, max_val);
-
-	std::ofstream out(filename);
-	if (!out.is_open()) {
-		throw std::runtime_error("Unable to open the file for writing!");
-	}
-	out << quantity << "\n";
-	for (size_t i = 0; i < quantity; i++) {
-		 out << dist(gen) << "\n";
-	}
-}
-
-
-// Reads generated numbers from provided file and stores them in provided vector.
-// Resizes vector to needed capacity.
-void get_num_from_file(std::vector<int>& exp_data, const std::string& filename) {
-	std::ifstream f(filename);
-	if (!f.is_open()) {
-		throw std::runtime_error("Unable to open the file with generated numbers!");
-	}
-	size_t count;
-	f >> count;
-	exp_data.resize(count);
-	for (size_t i = 0; i < count; i++) {
-		f >> exp_data[i];
-	}
-	if (f.fail()) {
-		throw std::runtime_error("Something wrong with the reading file!");
-	}
-}
-
-
-// Custom parallel none_of algorithm
-template <typename Predicate>
-// The function takes vector of generated numbers, a number of threads and a predicate
-bool custom_none_of(const std::vector<int>& exp_data, size_t K, Predicate pred) {
-	size_t chunk_count = exp_data.size() / K;
-
-	std::vector<int> thread_results(K, 0);
-	std::vector<std::thread> threads;
-
-	for (size_t i = 0; i < K; i++) {
-		std::vector<int>::const_iterator tbegin = exp_data.begin() + i * chunk_count;
-		std::vector<int>::const_iterator tend = (i == K - 1) ? exp_data.end() : tbegin + chunk_count;
-
-		threads.emplace_back([pred, tbegin, tend, i, &thread_results]() {
-			bool result = std::none_of(tbegin, tend, pred);
-			thread_results[i] = result ? 1 : 0;
-			});
-
-	}
-	for (auto& t : threads) {
-		t.join();
-	}
-
-	return std::all_of(thread_results.begin(), thread_results.end(), [](int res) {
-		return res;
-		});
-}
-
-
 int main() {
 	// Generating number and storing them in the vector
 	const std::string filename = "data.txt";
@@ -120,13 +54,14 @@ int main() {
 		std::cerr << "ERROR" << e.what() << "\n";
 		return 1;
 	}
-	
-	auto predicate = [](int num) {
+
+	bool(*predicate)(int) = [](int num) {
 		return (num > 20000); // entered this value, because we want to iterate through full vector
 		};
 
 	// Testing library algorithm excecution speed
-	std::cout << "Hardware threads: " << std::thread::hardware_concurrency() << "\n";
+	size_t hw = std::thread::hardware_concurrency();
+	std::cout << "Hardware threads: " << hw << "\n";
 	std::cout << "---LIBRARY ALGORITHM std::none_of() ---\n";
 	{
 		Timer t("No policy: ");
@@ -152,12 +87,12 @@ int main() {
 	size_t best_k;
 
 	std::cout << std::left << std::setw(5) << "K" <<
-		"|" << "Time(ms) \n";
+		"|" << " Time(ms) \n";
 
 	size_t k = 16;
 	for (size_t i = 1; i <= k; i++) {
 		double curr_time;
-		double curr_k = i;
+		size_t curr_k = i;
 		{
 			Timer t("", &curr_time);
 			volatile bool res = custom_none_of(generated_nums, i, predicate);
@@ -172,12 +107,11 @@ int main() {
 
 	std::cout << "---BEST VALUES---\n";
 	std::cout << "Number of threads: " << best_k << "\n";
+	std::cout << "Ratio (Best K / Hardware threads): " << static_cast<double>(best_k) / hw
+		<< " (" << best_k << " / " << hw << ")\n";
 	std::cout << "Time: " << best_time << "\n";
 
-
-
 }
-
 
 
 
