@@ -1,0 +1,266 @@
+Generating files...
+Generation complete.
+------TEST1(worst-case)------
+Hardware threads: 12
+---LIBRARY ALGORITHM std::none_of() ---
+No policy: : 0.215ms
+Policy seq: : 0.158ms
+Policy par: : 0.297ms
+Policy unseq: : 0.153ms
+Policy par_unseq: : 0.137ms
+---CUSTOM PARALLEL ALGORITHM---
+K    | Time(ms)
+1    | 1.162
+2    | 0.413
+3    | 0.402
+4    | 0.498
+5    | 0.561
+6    | 0.694
+7    | 0.755
+8    | 0.855
+9    | 0.767
+10   | 0.753
+11   | 1.015
+12   | 1.108
+13   | 1.297
+14   | 1.296
+15   | 1.479
+16   | 1.441
+17   | 1.521
+18   | 1.624
+19   | 1.64
+20   | 1.881
+21   | 1.891
+22   | 2.002
+23   | 2.024
+24   | 1.911
+25   | 2.106
+26   | 2.232
+27   | 2.413
+28   | 2.45
+29   | 2.341
+30   | 2.333
+---BEST VALUES---
+Number of threads: 3
+Ratio (Best K / Hardware threads): 0.25 (3 / 12)
+Time: 0.4
+------TEST1(early exit)------
+Hardware threads: 12
+---LIBRARY ALGORITHM std::none_of() ---
+No policy: : 0.006ms
+Policy seq: : 0.004ms
+Policy par: : 0.034ms
+Policy unseq: : 0.004ms
+Policy par_unseq: : 0.015ms
+---CUSTOM PARALLEL ALGORITHM---
+K    | Time(ms)
+1    | 0.3
+2    | 0.34
+3    | 0.41
+4    | 0.5
+5    | 0.6
+6    | 0.79
+7    | 0.76
+8    | 0.81
+9    | 1.1
+10   | 0.98
+11   | 1.1
+12   | 1.1
+13   | 1.2
+14   | 1.2
+15   | 1.4
+16   | 1.5
+17   | 1.6
+18   | 1.8
+19   | 1.6
+20   | 1.9
+21   | 2.2
+22   | 1.8
+23   | 1.9
+24   | 2.1
+25   | 2.2
+26   | 2
+27   | 2.4
+28   | 2.3
+29   | 2.3
+30   | 2.2
+---BEST VALUES---
+Number of threads: 1
+Ratio (Best K / Hardware threads): 0.08 (1 / 12)
+Time: 0.3
+------TEST2(worst-case)------
+Hardware threads: 12
+---LIBRARY ALGORITHM std::none_of() ---
+No policy: : 1.5ms
+Policy seq: : 1.6ms
+Policy par: : 0.6ms
+Policy unseq: : 2.1ms
+Policy par_unseq: : 0.53ms
+---CUSTOM PARALLEL ALGORITHM---
+K    | Time(ms)
+1    | 2.1
+2    | 1.3
+3    | 1.3
+4    | 1.1
+5    | 1.1
+6    | 1
+7    | 1.1
+8    | 1.1
+9    | 1.1
+10   | 1.1
+11   | 1.2
+12   | 1.1
+13   | 1.7
+14   | 1.2
+15   | 1.4
+16   | 1.4
+17   | 1.5
+18   | 1.5
+19   | 1.6
+20   | 2.1
+21   | 1.8
+22   | 1.9
+23   | 1.7
+24   | 2
+25   | 2.2
+26   | 2.1
+27   | 2
+28   | 2.1
+29   | 2.2
+30   | 2.4
+---BEST VALUES---
+Number of threads: 6
+Ratio (Best K / Hardware threads): 0.50 (6 / 12)
+Time: 1
+------TEST2(early exit)------
+Hardware threads: 12
+---LIBRARY ALGORITHM std::none_of() ---
+No policy: : 0.004ms
+Policy seq: : 0.006ms
+Policy par: : 0.018ms
+Policy unseq: : 0.006ms
+Policy par_unseq: : 0.015ms
+---CUSTOM PARALLEL ALGORITHM---
+K    | Time(ms)
+1    | 0.33
+2    | 0.37
+3    | 0.42
+4    | 0.51
+5    | 0.58
+6    | 0.6
+7    | 0.82
+8    | 0.78
+9    | 0.95
+10   | 0.91
+11   | 0.92
+12   | 1.1
+13   | 1.2
+14   | 1.2
+15   | 1.3
+16   | 1.4
+17   | 1.6
+18   | 1.6
+19   | 1.5
+20   | 1.5
+21   | 2
+22   | 2
+23   | 1.9
+24   | 2
+25   | 1.9
+26   | 2.1
+27   | 2.1
+28   | 2.3
+29   | 2.4
+30   | 2.1
+---BEST VALUES---
+Number of threads: 1
+Ratio (Best K / Hardware threads): 0.08 (1 / 12)
+Time: 0.33
+------TEST3(worst-case)------
+Hardware threads: 12
+---LIBRARY ALGORITHM std::none_of() ---
+No policy: : 16ms
+Policy seq: : 17ms
+Policy par: : 2.6ms
+Policy unseq: : 16ms
+Policy par_unseq: : 2.7ms
+---CUSTOM PARALLEL ALGORITHM---
+K    | Time(ms)
+1    | 20
+2    | 10
+3    | 9
+4    | 7.3
+5    | 6.2
+6    | 5.3
+7    | 4.4
+8    | 4.2
+9    | 4
+10   | 3.8
+11   | 3.5
+12   | 4.3
+13   | 5
+14   | 4.3
+15   | 4.7
+16   | 4.8
+17   | 4
+18   | 4.4
+19   | 5.5
+20   | 4.9
+21   | 4.5
+22   | 5.4
+23   | 4.4
+24   | 4
+25   | 4.5
+26   | 4.5
+27   | 4.5
+28   | 4.9
+29   | 5.3
+30   | 4.5
+---BEST VALUES---
+Number of threads: 11
+Ratio (Best K / Hardware threads): 0.92 (11 / 12)
+Time: 3.5
+------TEST3(early exit)------
+Hardware threads: 12
+---LIBRARY ALGORITHM std::none_of() ---
+No policy: : 0.003ms
+Policy seq: : 0.003ms
+Policy par: : 0.019ms
+Policy unseq: : 0.003ms
+Policy par_unseq: : 0.014ms
+---CUSTOM PARALLEL ALGORITHM---
+K    | Time(ms)
+1    | 0.23
+2    | 0.33
+3    | 0.49
+4    | 0.55
+5    | 0.57
+6    | 0.66
+7    | 0.74
+8    | 0.81
+9    | 0.87
+10   | 0.95
+11   | 1
+12   | 1.1
+13   | 1.3
+14   | 1.1
+15   | 1.3
+16   | 1.4
+17   | 1.5
+18   | 1.6
+19   | 1.5
+20   | 1.6
+21   | 1.8
+22   | 1.8
+23   | 1.8
+24   | 1.9
+25   | 2
+26   | 2.2
+27   | 2.1
+28   | 2.2
+29   | 2.6
+30   | 2.5
+---BEST VALUES---
+Number of threads: 1
+Ratio (Best K / Hardware threads): 0.08 (1 / 12)
+Time: 0.23

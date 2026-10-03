@@ -91,6 +91,6 @@ void run_test(std::vector<int>& generated_nums, bool(*predicate)(int), size_t k)
 	std::cout << "Number of threads: " << best_k << "\n";
 	std::cout << "Ratio (Best K / Hardware threads): " << std::fixed << std::setprecision(2) << static_cast<double>(best_k) / hw
 		<< " (" << best_k << " / " << hw << ")\n";
-	std::cout << "Time: " << best_time << "\n";
+	std::cout << std::defaultfloat << "Time: " << best_time << "\n";
 
 }
